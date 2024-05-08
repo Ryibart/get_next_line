@@ -6,15 +6,20 @@
 /*   By: rtammi <rtammi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 17:13:31 by rtammi            #+#    #+#             */
-/*   Updated: 2024/05/07 18:27:59 by rtammi           ###   ########.fr       */
+/*   Updated: 2024/05/08 13:46:26 by rtammi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 64
+# endif
+
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdint.h>
 
 char	*get_next_line(int fd);
 

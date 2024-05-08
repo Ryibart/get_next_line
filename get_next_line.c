@@ -6,7 +6,7 @@
 /*   By: rtammi <rtammi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 17:13:25 by rtammi            #+#    #+#             */
-/*   Updated: 2024/05/07 20:14:42 by rtammi           ###   ########.fr       */
+/*   Updated: 2024/05/08 18:20:52 by rtammi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,14 @@ char	*fd_line(char *buffer)
 	char	*line;
 
 	i = 0;
-	if (!buffer)
+	if (!buffer[i])
 		return (0);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	line = ft_calloc(i + 2, sizeof(char));
+	if (buffer[i] == '\0')
+		line = ft_calloc(i + 1, sizeof(char));
+	else
+		line = ft_calloc(i + 2, sizeof(char));
 	if (!line)
 		return (free_return(buffer));
 	i = 0;
@@ -73,7 +76,7 @@ char	*fd_file(int fd, char *result)
 	if (!result)
 		result = ft_calloc(1, 1);
 	if (!result)
-		return (0);
+		return (free_return(result));
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buffer)
 		return (free_return(result));
@@ -85,10 +88,13 @@ char	*fd_file(int fd, char *result)
 			return (free_return(result));
 		buffer[read_bytes] = '\0';
 		temp = strjoin_free(result, buffer);
+		if (!temp)
+		{
+			free(result);
+			return (free_return(buffer));
+		}
 		free(result);
 		result = temp;
-		if (!result)
-			return (free_return(buffer));
 	}
 	free(buffer);
 	if (ft_strlen(result) == 0)
@@ -102,11 +108,7 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-	{
-		free(buffer);
-		buffer = 0;
-		return (0);
-	}
+		return (free_return(buffer));
 	buffer = fd_file(fd, buffer);
 	if (!buffer)
 		return (free_return(buffer));
