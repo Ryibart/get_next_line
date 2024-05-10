@@ -6,7 +6,7 @@
 /*   By: rtammi <rtammi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 17:13:28 by rtammi            #+#    #+#             */
-/*   Updated: 2024/05/09 18:05:51 by rtammi           ###   ########.fr       */
+/*   Updated: 2024/05/10 13:11:31 by rtammi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*strjoin_free(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*ret;
 	int		i;

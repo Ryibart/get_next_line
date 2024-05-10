@@ -6,109 +6,105 @@
 /*   By: rtammi <rtammi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 17:13:25 by rtammi            #+#    #+#             */
-/*   Updated: 2024/05/09 18:00:13 by rtammi           ###   ########.fr       */
+/*   Updated: 2024/05/10 16:33:19 by rtammi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*fd_next(char *buffer)
+char	*extract_remaining_buffer(char *buffer)
 {
-	ssize_t	i;
-	ssize_t	j;
-	char			*next;
+	ssize_t	end_i;
+	ssize_t	rem_i;
+	char	*rem_content;
 
-	i = 0;
-	j = 0;
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
-	if (!buffer[i])
+	end_i = 0;
+	rem_i = 0;
+	while (buffer[end_i] && buffer[end_i] != '\n')
+		end_i++;
+	if (!buffer[end_i])
 		return (free_return(buffer));
-	next = ft_calloc(ft_strlen(buffer) - i + 1, sizeof(char));
-	if (!next)
+	rem_content = ft_calloc(ft_strlen(buffer) - end_i + 1, sizeof(char));
+	if (!rem_content)
 		return (free_return(buffer));
-	i++;
-	while (buffer[i])
-		next[j++] = buffer[i++];
+	end_i++;
+	while (buffer[end_i])
+		rem_content[rem_i++] = buffer[end_i++];
 	free(buffer);
 	buffer = NULL;
-	return (next);
+	return (rem_content);
 }
 
-char	*fd_line(char *buffer)
+char	*extract_line(char *buffer)
 {
 	ssize_t	i;
-	char			*line;
+	char	*current_line;
 
 	i = 0;
 	if (!buffer[i])
-		return (free_return(buffer));
+		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	if (buffer[i] == '\0')
-		line = ft_calloc(i + 1, sizeof(char));
+		current_line = ft_calloc(i + 1, sizeof(char));
 	else
-		line = ft_calloc(i + 2, sizeof(char));
-	if (!line)
+		current_line = ft_calloc(i + 2, sizeof(char));
+	if (!current_line)
 		return (NULL);
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 	{
-		line[i] = buffer[i];
+		current_line[i] = buffer[i];
 		i++;
 	}
 	if (buffer[i] && buffer[i] == '\n')
-		line[i++] = '\n';
-	return (line);
+		current_line[i++] = '\n';
+	return (current_line);
 }
 
-char	*read_bytes(int fd, char *buffer, char *result)
+char	*read_cat_chunks(int fd, char *buffer, char *accum_data)
 {
 	ssize_t	bytes;
-	char			*temp;
+	char	*cat_buffer;
 
 	bytes = 1;
-	while (bytes > 0 && !ft_strchr(result, '\n'))
+	while (bytes > 0 && !ft_strchr(accum_data, '\n'))
 	{
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		if (bytes == -1)
 			return (NULL);
 		buffer[bytes] = 0;
-		temp = strjoin_free(result, buffer);
-		if (!temp)
+		cat_buffer = ft_strjoin(accum_data, buffer);
+		if (!cat_buffer)
 		{
-			free(result);
-			result = NULL;
-			free(buffer);
-			buffer = NULL;
-			return (NULL);
+			free(accum_data);
+			return (free_return(buffer));
 		}
-		free(result);
-		result = NULL;
-		result = temp;
+		free(accum_data);
+		accum_data = cat_buffer;
 	}
-	return (result);
+	return (accum_data);
 }
 
-char	*fd_file(int fd, char *result)
+char	*read_file_data(int fd, char *accum_data)
 {
 	char	*buffer;
 
-	if (!result)
-		result = ft_calloc(1, 1);
-	if (!result)
+	if (!accum_data)
+		accum_data = ft_calloc(1, 1);
+	if (!accum_data)
 		return (NULL);
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buffer)
-		return (free_return(result));
-	result = read_bytes(fd, buffer, result);
-	if (!result)
+		return (free_return(accum_data));
+	accum_data = read_cat_chunks(fd, buffer, accum_data);
+	if (!accum_data)
 		return (NULL);
 	free(buffer);
 	buffer = NULL;
-	if (ft_strlen(result) == 0)
-		return (free_return(result));
-	return (result);
+	if (ft_strlen(accum_data) == 0)
+		return (free_return(accum_data));
+	return (accum_data);
 }
 
 char	*get_next_line(int fd)
@@ -116,23 +112,23 @@ char	*get_next_line(int fd)
 	static char	*buffer[OPEN_MAX];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0 || fd > OPEN_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0 || fd >= OPEN_MAX)
 	{
 		if (buffer[fd] != NULL)
 			free(buffer[fd]);
 		buffer[fd] = NULL;
 		return (NULL);
 	}
-	buffer[fd] = fd_file(fd, buffer[fd]);
+	buffer[fd] = read_file_data(fd, buffer[fd]);
 	if (buffer[fd] == NULL)
 		return (NULL);
-	line = fd_line(buffer[fd]);
+	line = extract_line(buffer[fd]);
 	if (line == NULL)
 	{
 		free(buffer[fd]);
 		buffer[fd] = NULL;
 		return (NULL);
 	}
-	buffer[fd] = fd_next(buffer[fd]);
+	buffer[fd] = extract_remaining_buffer(buffer[fd]);
 	return (line);
 }

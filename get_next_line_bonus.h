@@ -6,7 +6,7 @@
 /*   By: rtammi <rtammi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 17:13:31 by rtammi            #+#    #+#             */
-/*   Updated: 2024/05/09 17:00:39 by rtammi           ###   ########.fr       */
+/*   Updated: 2024/05/10 16:11:26 by rtammi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <stdint.h>
 # include <limits.h>
 
 char	*get_next_line(int fd);
@@ -28,6 +27,6 @@ char	*free_return(void *str);
 void	*ft_calloc(size_t count, size_t size);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *s);
-char	*strjoin_free(char const *s1, char const *s2);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif
