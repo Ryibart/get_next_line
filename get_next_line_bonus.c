@@ -6,11 +6,40 @@
 /*   By: rtammi <rtammi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 17:13:25 by rtammi            #+#    #+#             */
-/*   Updated: 2024/05/10 16:33:19 by rtammi           ###   ########.fr       */
+/*   Updated: 2024/05/13 17:37:23 by rtammi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*══| get_next_line |══════════════════════════════════════════════════════════*
+	
+	Purpose:	Reads a file descriptor line by line, providing each line as a
+				null-terminated string with the newline character included.
+				This function allows sequential reading of text files without
+				loading the entire file into memory, making it suitable for
+				processing large files or streams. Handles multiple file
+				descriptors.
+				
+	Parameters:
+				fd (IN) -- The file descriptor to read from.
+
+	Returns:	
+				A pointer to the line read from the file descriptor. If an error
+				occurs, `NULL` is returned.
+
+	Helpers:	
+				`extract_remaining_buffer` -- Extracts the remaining content
+											  of the buffer after the
+											  newline character.
+				`extract_line` -- Extracts the line from the buffer.
+				`read_cat_chunks` -- Reads and concatenates chunks of data from
+									 the file descriptor.
+				`read_file_data` -- Reads the data from the file descriptor 
+									and manages buffer allocation.
+
+*═════════════════════════════════════════════════════════════════════════════*/
+
 #include "get_next_line_bonus.h"
+#include <limits.h>
 
 char	*extract_remaining_buffer(char *buffer)
 {

@@ -6,7 +6,7 @@
 /*   By: rtammi <rtammi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 17:13:31 by rtammi            #+#    #+#             */
-/*   Updated: 2024/05/10 16:11:26 by rtammi           ###   ########.fr       */
+/*   Updated: 2024/05/13 17:34:28 by rtammi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <limits.h>
 
 char	*get_next_line(int fd);
 
