@@ -6,7 +6,7 @@
 /*   By: rtammi <rtammi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 17:13:25 by rtammi            #+#    #+#             */
-/*   Updated: 2024/05/13 16:46:35 by rtammi           ###   ########.fr       */
+/*   Updated: 2024/05/28 19:11:42 by rtammi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ char	*get_next_line(int fd)
 	}
 	buffer = read_file_data(fd, buffer);
 	if (buffer == NULL)
-		return (NULL);
+		return (free_return(buffer));
 	line = extract_line(buffer);
 	if (line == NULL)
 	{
